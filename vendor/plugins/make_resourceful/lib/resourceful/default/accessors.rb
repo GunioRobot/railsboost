@@ -68,7 +68,7 @@ module Resourceful
         end
       end
 
-      
+
       # This method will call current_object and store
       # the results in an instance variable based
       # off the singularized name of the controller.

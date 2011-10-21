@@ -19,7 +19,7 @@ module Resourceful
       def transform_attributes(attributes)
         options = {}
         attributes = Array(attributes)
-        
+
         options[:include] = Hash[*attributes.
           select { |attr| attr.is_a? Hash }.
           map { |attr, sub_attrs| [attr, fix_options(sub_attrs)] }.flatten]

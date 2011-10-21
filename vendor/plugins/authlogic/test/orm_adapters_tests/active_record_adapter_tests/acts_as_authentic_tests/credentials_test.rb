@@ -48,22 +48,22 @@ module ORMAdaptersTests
           user.password_confirmation = "my pass"
           assert !user.valid?
           assert user.errors.on(:email)
-          
+
           user.email = "some email"
           assert !user.valid?
           assert user.errors.on(:email)
-          
+
           user.email = "a@a.com"
           assert user.valid?
         end
-        
+
         # Make sure the default :within option is ignored, since AR will raise an error if :within and :minimum are passed.
         def test_multiple_length_options
           User.acts_as_authentic(:login_field_validates_length_of_options => {:minimum => 6})
           user = User.new
           assert_nothing_raised { user.valid? }
         end
-        
+
         def test_employee_validations
           employee = Employee.new
           employee.password = "pass"
@@ -83,7 +83,7 @@ module ORMAdaptersTests
           employee.email = "notfake@email.com"
           assert employee.valid?
         end
-        
+
         def test_friendly_unique_token
           assert_equal 20, User.friendly_unique_token.length
           assert_equal 20, Employee.friendly_unique_token.length # make sure encryptions use hashes also
@@ -94,7 +94,7 @@ module ORMAdaptersTests
 
           assert_equal 1000, unique_tokens.size
         end
-        
+
         def test_password
           user = User.new
           user.password = "sillywilly"
@@ -119,12 +119,12 @@ module ORMAdaptersTests
           assert drew.valid_password?("drewrocks")
           assert !drew.valid_password?(drew.crypted_password)
         end
-        
+
         def test_reset_password
           ben = users(:ben)
           UserSession.create(ben)
           assert UserSession.find
-          
+
           old_password = ben.crypted_password
           old_salt = ben.password_salt
           old_persistence_token = ben.persistence_token
@@ -134,13 +134,13 @@ module ORMAdaptersTests
           assert_not_equal old_persistence_token, ben.persistence_token
           assert UserSession.find
         end
-        
+
         def test_reset_password!
           UserSession.create(users(:ben))
           session = UserSession.find
           assert session
           ben = session.record
-          
+
           old_password = ben.crypted_password
           old_salt = ben.password_salt
           old_persistence_token = ben.persistence_token

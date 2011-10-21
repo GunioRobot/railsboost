@@ -73,7 +73,7 @@ module RightAws
   #  acf.set_distribution_config(distibution[:aws_id], config) #=> true
   #
   class AcfInterface < RightAwsBase
-    
+
     include RightAwsBaseInterface
 
     API_VERSION      = "2008-06-30"
@@ -109,8 +109,8 @@ module RightAws
              :default_port     => ENV['ACF_URL'] ? URI.parse(ENV['ACF_URL']).port   : DEFAULT_PORT,
              :default_service  => ENV['ACF_URL'] ? URI.parse(ENV['ACF_URL']).path   : DEFAULT_PATH,
              :default_protocol => ENV['ACF_URL'] ? URI.parse(ENV['ACF_URL']).scheme : DEFAULT_PROTOCOL },
-           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'], 
-           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'], 
+           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'],
+           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'],
            params)
     end
 
@@ -132,12 +132,12 @@ module RightAws
       # Set request headers
       headers.each { |key, value| request[key.to_s] = value }
       # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
       end
-      
+
       # Sends request to Amazon and parses the response.
       # Raises AwsError if any banana happened.
     def request_info(request, parser, &block) # :nodoc:
@@ -268,7 +268,7 @@ module RightAws
       merge_headers(request_info(request_hash, AcfDistributionConfigParser.new))
     end
 
-    # Set a distribution's configuration 
+    # Set a distribution's configuration
     # (the :origin and the :caller_reference cannot be changed).
     # Returns +true+ on success or RightAws::AwsError exception.
     #

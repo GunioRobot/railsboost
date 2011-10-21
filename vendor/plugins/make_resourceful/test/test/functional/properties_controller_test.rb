@@ -33,7 +33,7 @@ class PropertiesControllerTest < Test::Unit::TestCase
       :id => 1,
       :thing_id => 2,
       :person_id => 1
-    
+
     assert_response 404
   end
 
@@ -45,8 +45,8 @@ class PropertiesControllerTest < Test::Unit::TestCase
         :person_id => 2
     rescue ActiveRecord::RecordNotFound => err
     end
-    
-    assert_not_nil err    
+
+    assert_not_nil err
   end
 
   def test_create

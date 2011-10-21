@@ -8,7 +8,7 @@ module Authlogic
         klass.after_save :save_cookie, :if => :persisting?
         klass.after_destroy :destroy_cookie, :if => :persisting?
       end
-      
+
       # Tries to validate the session from information in the cookie
       def valid_cookie?
         if cookie_credentials
@@ -18,12 +18,12 @@ module Authlogic
           false
         end
       end
-      
+
       private
         def cookie_credentials
           controller.cookies[cookie_key]
         end
-        
+
         def save_cookie
           controller.cookies[cookie_key] = {
             :value => record.send(persistence_token_field),
@@ -31,7 +31,7 @@ module Authlogic
             :domain => controller.cookie_domain
           }
         end
-        
+
         def destroy_cookie
           controller.cookies.delete cookie_key, :domain => controller.cookie_domain
         end

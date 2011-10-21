@@ -8,20 +8,20 @@ module Authlogic
       def authenticate_with_http_basic(&block)
         controller.authenticate_with_http_basic(&block)
       end
-      
+
       def cookies
         controller.send(:cookies)
       end
-      
+
       def cookie_domain
         @cookie_domain_key ||= (Rails::VERSION::MAJOR >= 2 && Rails::VERSION::MINOR >= 3) ? :domain : :session_domain
         controller.class.session_options[@cookie_domain_key]
       end
-      
+
       def request_content_type
         request.format.to_s
       end
-      
+
       # = Rails Implementation
       #
       # Lets Authlogic know about the controller object via a before filter, AKA "activates" authlogic.

@@ -18,29 +18,29 @@ module Authlogic
         module SingleAccess
           def acts_as_authentic_with_single_access(options = {})
             acts_as_authentic_without_single_access(options)
-            
+
             return if options[:single_access_token_field].blank?
-            
+
             class_eval <<-"end_eval", __FILE__, __LINE__
               validates_uniqueness_of :#{options[:single_access_token_field]}, :if => :#{options[:single_access_token_field]}_changed?
-            
+
               before_validation :set_#{options[:single_access_token_field]}_field
-            
+
               def password_with_single_access=(value)
                 reset_#{options[:single_access_token_field]} if #{options[:change_single_access_token_with_password].inspect}
                 self.password_without_single_access = value
               end
               alias_method_chain :password=, :single_access
-            
+
               def reset_#{options[:single_access_token_field]}
                 self.#{options[:single_access_token_field]} = self.class.friendly_unique_token
               end
-            
+
               def reset_#{options[:single_access_token_field]}!
                 reset_#{options[:single_access_token_field]}
                 save_without_session_maintenance
               end
-            
+
               protected
                 def set_#{options[:single_access_token_field]}_field
                   reset_#{options[:single_access_token_field]} if #{options[:single_access_token_field]}.blank?

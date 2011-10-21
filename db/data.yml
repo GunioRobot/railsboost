@@ -1,7 +1,7 @@
 
---- 
-commands: 
-  columns: 
+---
+commands:
+  columns:
   - id
   - type
   - permalink
@@ -12,22 +12,22 @@ commands:
   - updated_at
   - url
   - description
-  records: 
+  records:
   - - "1"
-    - 
+    -
     - jquery
     - jquery
-    - 
+    -
     - run "curl -L http://jqueryjs.googlecode.com/files/jquery-1.2.6.min.js > public/javascripts/jquery.js"
     - 2009-03-06 00:57:59
     - 2009-03-06 01:30:43
     - http://jquery.com
     - Install JQuery 1.2.6
   - - "2"
-    - 
+    -
     - jquery-form
     - jquery-form
-    - 
+    -
     - |
       run "curl -L http://jqueryjs.googlecode.com/svn/trunk/plugins/form/jquery.form.js > public/javascripts/jquery.form.js"
 
@@ -40,7 +40,7 @@ commands:
     - markaby
     - markaby
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/why/markaby.git
 
@@ -54,7 +54,7 @@ commands:
     - rspec
     - rspec
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/dchelimsky/rspec.git
 
@@ -68,7 +68,7 @@ commands:
     - restful-authentication
     - restful-authentication
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/technoweenie/restful-authentication.git
 
@@ -78,10 +78,10 @@ commands:
     - http://weblog.techno-weenie.net/
     - "Generates common user authentication code for Rails/Merb, with a full test/unit and rspec suite and optional Acts as State Machine support built-in.  "
   - - "6"
-    - 
+    -
     - git-ignore
     - git-ignore
-    - 
+    -
     - |-
       run "touch tmp/.gitignore log/.gitignore vendor/.gitignore"
         run %{find . -type d -empty | grep -v "vendor" | grep -v ".git" | grep -v "tmp" | xargs -I xxx touch xxx/.gitignore}
@@ -100,7 +100,7 @@ commands:
     - GemCommand
     - ""
     - erubis
-    - 
+    -
     - ""
     - 2009-03-06 01:04:09
     - 2009-03-06 01:30:43
@@ -110,7 +110,7 @@ commands:
     - GenerateCommand
     - rspec-generate
     - rspec-generate
-    - 
+    -
     - generate("rspec")
     - 2009-03-06 01:07:34
     - 2009-03-06 01:30:43
@@ -121,7 +121,7 @@ commands:
     - make-resourceful
     - make_resourceful
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/hcatlin/make_resourceful.git
 
@@ -135,7 +135,7 @@ commands:
     - haml
     - haml
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/nex3/haml.git
 
@@ -145,10 +145,10 @@ commands:
     - http://haml.hamptoncatlin.com
     - The world's greatest templating system
   - - "11"
-    - 
+    -
     - ""
     - delete default files
-    - 
+    -
     - |-
       run "rm README"
       run "rm public/index.html"
@@ -164,7 +164,7 @@ commands:
     - rspec-rails
     - rspec-rails
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/dchelimsky/rspec-rails.git
 
@@ -178,7 +178,7 @@ commands:
     - factory-girl
     - factory_girl
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/thoughtbot/factory_girl.git
 
@@ -192,7 +192,7 @@ commands:
     - resource-controller
     - resource_controller
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/giraffesoft/resource_controller.git
 
@@ -206,7 +206,7 @@ commands:
     - ""
     - cucumber
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       svn: ""
       git: git://github.com/aslakhellesoy/cucumber.git
 
@@ -219,17 +219,17 @@ commands:
     - GemCommand
     - ""
     - hoe
-    - 
+    -
     - ""
     - 2009-03-06 01:41:42
     - 2009-03-06 01:41:42
     - ""
     - ""
   - - "18"
-    - 
+    -
     - ""
     - prototype
-    - 
+    -
     - "# Prototype is the default and requires no further action"
     - 2009-03-06 02:03:32
     - 2009-03-06 21:23:42
@@ -240,7 +240,7 @@ commands:
     - shoulda
     - thoughtbot-shoulda
     - |
-      --- !map:HashWithIndifferentAccess 
+      --- !map:HashWithIndifferentAccess
       source: http://gems.github.com
 
     - ""
@@ -252,22 +252,22 @@ commands:
     - GenerateCommand
     - ""
     - restful-authentication
-    - 
+    -
     - generate("authenticated user sessions")
     - 2009-03-07 00:01:53
     - 2009-03-07 00:01:53
     - http://github.com/technoweenie/restful-authentication/tree/master
     - Generates the required parts of restful-authentication
 
---- 
-dependencies: 
-  columns: 
+---
+dependencies:
+  columns:
   - id
   - command_id
   - required_command_id
   - created_at
   - updated_at
-  records: 
+  records:
   - - "2"
     - "12"
     - "4"
@@ -284,70 +284,70 @@ dependencies:
     - 2009-03-07 00:02:31
     - 2009-03-07 00:02:31
 
---- 
-templates: 
-  columns: 
+---
+templates:
+  columns:
   - id
   - name
   - global_options
   - created_at
   - updated_at
-  records: 
+  records:
   - - "1"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 02:08:53
     - 2009-03-06 02:08:53
   - - "2"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 02:09:10
     - 2009-03-06 02:09:10
   - - "3"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 02:18:02
     - 2009-03-06 02:18:02
   - - "4"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 20:59:13
     - 2009-03-06 20:59:13
   - - "5"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 21:14:00
     - 2009-03-06 21:14:00
   - - "6"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 21:15:14
     - 2009-03-06 21:15:14
   - - "7"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 21:18:38
     - 2009-03-06 21:18:38
   - - "8"
-    - 
-    - 
+    -
+    -
     - 2009-03-06 23:56:16
     - 2009-03-06 23:56:16
   - - "9"
-    - 
-    - 
+    -
+    -
     - 2009-03-07 00:05:07
     - 2009-03-07 00:05:07
 
---- 
-template_commands: 
-  columns: 
+---
+template_commands:
+  columns:
   - id
   - template_id
   - command_id
   - created_at
   - updated_at
-  records: 
+  records:
   - - "1"
     - "1"
     - "1"

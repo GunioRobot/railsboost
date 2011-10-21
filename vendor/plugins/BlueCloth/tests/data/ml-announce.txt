@@ -12,6 +12,6 @@ getting something set up in the coming days.
   [2]: http://bluecloth.rubyforge.org/
 
 --
-Michael Granger <ged@FaerieMUD.org>  
-Rubymage, Believer, Architect  
-The FaerieMUD Consortium <http://www.FaerieMUD.org/>  
+Michael Granger <ged@FaerieMUD.org>
+Rubymage, Believer, Architect
+The FaerieMUD Consortium <http://www.FaerieMUD.org/>

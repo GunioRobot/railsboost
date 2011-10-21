@@ -22,7 +22,7 @@ module Authlogic
           false
         end
       end
-      
+
       private
         def params_credentials
           controller.params[params_key]

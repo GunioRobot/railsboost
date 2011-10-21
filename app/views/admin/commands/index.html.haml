@@ -7,7 +7,7 @@
       - form_tag new_admin_command_path, :method => "get" do
         = hidden_field_tag "type", type
         %button{:type => "submit"}== Create New #{type[0..-8].capitalize}
-  - else 
+  - else
     %h2
       Misc Commands
       = button_to 'Create Misc Command', new_admin_command_path, :method => "get"

@@ -1,8 +1,8 @@
 class PluginCommand < Command
-  
-  def self.default_options 
+
+  def self.default_options
     {:git => "",
      :svn => ""}
   end
-  
+
 end

@@ -15,7 +15,7 @@ module Authlogic
           before_save :set_last_request_at
         end
       end
-      
+
       # This implements the stale functionality when trying to find a session. If the session is stale the record will be cleared, but the session object will still be
       # returned. This allows you to perform a current_user_session.stale? query in order to inform your users of why they need to log back in.
       def find_record_with_timeout
@@ -26,13 +26,13 @@ module Authlogic
         end
         result
       end
-    
+
       # Tells you if the record is stale or not. Meaning the record has timed out. This will only return true if you set logout_on_timeout to true in your configuration.
       # Basically how a bank website works. If you aren't active over a certain period of time your session becomes stale and requires you to log back in.
       def stale?
         @stale == true || (logout_on_timeout? && record && record.logged_out?)
       end
-    
+
       private
         def reset_stale_state
           @stale = nil

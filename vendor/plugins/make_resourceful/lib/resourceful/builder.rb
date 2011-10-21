@@ -39,7 +39,7 @@ module Resourceful
       kontroller.write_inheritable_attribute(:parents, @parents)
       kontroller.before_filter { |c| c.send(:load_parent_objects) }
     end
-      
+
     def actions(*available_actions)
       if available_actions.first == :all
         available_actions = controller.new.plural? ? ACTIONS : SINGULAR_ACTIONS

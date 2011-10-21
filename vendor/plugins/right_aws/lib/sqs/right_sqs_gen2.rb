@@ -65,12 +65,12 @@ module RightAws
     #     :logger       => Logger Object}        # Logger instance: logs to STDOUT if omitted }
   class SqsGen2
     attr_reader :interface
-    
+
     def initialize(aws_access_key_id=nil, aws_secret_access_key=nil, params={})
       @interface = SqsGen2Interface.new(aws_access_key_id, aws_secret_access_key, params)
     end
-    
-      # Retrieves a list of queues. 
+
+      # Retrieves a list of queues.
       # Returns an +array+ of +Queue+ instances.
       #
       #  RightAws::Sqs.queues #=> array of queues
@@ -80,8 +80,8 @@ module RightAws
         Queue.new(self, url)
       end
     end
-    
-      # Returns Queue instance by queue name. 
+
+      # Returns Queue instance by queue name.
       # If the queue does not exist at Amazon SQS and +create+ is true, the method creates it.
       #
       #  RightAws::SqsGen2.queue('my_awesome_queue') #=> #<RightAws::SqsGen2::Queue:0xb7b626e4 ... >
@@ -91,12 +91,12 @@ module RightAws
       url = (create ? @interface.create_queue(queue_name, visibility) : nil) unless url
       url ? Queue.new(self, url) : nil
     end
-  
-  
+
+
     class Queue
       attr_reader :name, :url, :sqs
-      
-        # Returns Queue instance by queue name. 
+
+        # Returns Queue instance by queue name.
         # If the queue does not exist at Amazon SQS and +create+ is true, the method creates it.
         #
         #  RightAws::SqsGen2::Queue.create(sqs, 'my_awesome_queue') #=> #<RightAws::SqsGen2::Queue:0xb7b626e4 ... >
@@ -104,8 +104,8 @@ module RightAws
       def self.create(sqs, url_or_name, create=true, visibility=nil)
         sqs.queue(url_or_name, create, visibility)
       end
-      
-        # Creates new Queue instance. 
+
+        # Creates new Queue instance.
         # Does not create a queue at Amazon.
         #
         #  queue = RightAws::SqsGen2::Queue.new(sqs, 'my_awesome_queue')
@@ -115,7 +115,7 @@ module RightAws
         @url  = @sqs.interface.queue_url_by_name(url_or_name)
         @name = @sqs.interface.queue_name_by_url(@url)
       end
-      
+
         # Retrieves queue size.
         #
         #  queue.size #=> 1
@@ -123,7 +123,7 @@ module RightAws
       def size
         @sqs.interface.get_queue_length(@url)
       end
-      
+
         # Clears queue, deleting only the visible messages.  Any message within its visibility
         # timeout will not be deleted, and will re-appear in the queue in the
         # future when the timeout expires.
@@ -138,9 +138,9 @@ module RightAws
       def clear()
           @sqs.interface.clear_queue(@url)
       end
-      
-        # Deletes queue.  Any messages in the queue will be permanently lost. 
-        # Returns +true+. 
+
+        # Deletes queue.  Any messages in the queue will be permanently lost.
+        # Returns +true+.
         #
         # NB: Use with caution; severe data loss is possible!
         #
@@ -150,7 +150,7 @@ module RightAws
         @sqs.interface.delete_queue(@url)
       end
 
-        # Sends new message to queue. 
+        # Sends new message to queue.
         # Returns new Message instance that has been sent to queue.
       def send_message(message)
         message = message.to_s
@@ -162,8 +162,8 @@ module RightAws
       end
       alias_method :push, :send_message
 
-        # Retrieves several messages from queue. 
-        # Returns an array of Message instances. 
+        # Retrieves several messages from queue.
+        # Returns an array of Message instances.
         #
         #  queue.receive_messages(2,10) #=> array of messages
         #
@@ -172,13 +172,13 @@ module RightAws
         list.map! do |entry|
           msg = Message.new(self, entry['MessageId'], entry['ReceiptHandle'],
                             entry['Body'], visibility)
-          msg.received_at = Time.now 
+          msg.received_at = Time.now
           msg.receive_checksum = entry['MD5OfBody']
           msg
         end
       end
-      
-        # Retrieves first accessible message from queue. 
+
+        # Retrieves first accessible message from queue.
         # Returns Message instance or +nil+ it the queue is empty.
         #
         #  queue.receive #=> #<RightAws::SqsGen2::Message:0xb7bf0884 ... >
@@ -188,7 +188,7 @@ module RightAws
         list.empty? ? nil : list[0]
       end
 
-        # Pops (and deletes) first accessible message from queue. 
+        # Pops (and deletes) first accessible message from queue.
         # Returns Message instance or +nil+ if the queue is empty.
         #
         #  queue.pop #=> #<RightAws::SqsGen2::Message:0xb7bf0884 ... >
@@ -199,12 +199,12 @@ module RightAws
         entry = list[0]
         msg = Message.new(self, entry['MessageId'], entry['ReceiptHandle'],
                             entry['Body'], visibility)
-        msg.received_at = Time.now 
+        msg.received_at = Time.now
         msg.receive_checksum = entry['MD5OfBody']
         msg
       end
 
-        # Retrieves +VisibilityTimeout+ value for the queue. 
+        # Retrieves +VisibilityTimeout+ value for the queue.
         # Returns new timeout value.
         #
         #  queue.visibility #=> 30
@@ -212,9 +212,9 @@ module RightAws
       def visibility
         @sqs.interface.get_queue_attributes(@url, 'VisibilityTimeout')['VisibilityTimeout']
       end
-        
-        # Sets new +VisibilityTimeout+ for the queue. 
-        # Returns new timeout value. 
+
+        # Sets new +VisibilityTimeout+ for the queue.
+        # Returns new timeout value.
         #
         #  queue.visibility #=> 30
         #  queue.visibility = 33
@@ -224,13 +224,13 @@ module RightAws
         @sqs.interface.set_queue_attributes(@url, 'VisibilityTimeout', visibility_timeout)
         visibility_timeout
       end
-        
-        # Sets new queue attribute value. 
-        # Not all attributes may be changed: +ApproximateNumberOfMessages+ (for example) is a read only attribute. 
-        # Returns a value to be assigned to attribute. 
+
+        # Sets new queue attribute value.
+        # Not all attributes may be changed: +ApproximateNumberOfMessages+ (for example) is a read only attribute.
+        # Returns a value to be assigned to attribute.
         # Currently, 'VisibilityTimeout' is the only settable queue attribute.
         # Attempting to set non-existent attributes generates an indignant
-        # exception. 
+        # exception.
         #
         # queue.set_attribute('VisibilityTimeout', '100')  #=> '100'
         # queue.get_attribute('VisibilityTimeout')         #=> '100'
@@ -239,27 +239,27 @@ module RightAws
         @sqs.interface.set_queue_attributes(@url, attribute, value)
         value
       end
-        
-        # Retrieves queue attributes. 
-        # At this moment Amazon supports +VisibilityTimeout+ and +ApproximateNumberOfMessages+ only. 
+
+        # Retrieves queue attributes.
+        # At this moment Amazon supports +VisibilityTimeout+ and +ApproximateNumberOfMessages+ only.
         # If the name of attribute is set, returns its value. Otherwise, returns a hash of attributes.
         #
-        # queue.get_attribute('VisibilityTimeout')  #=> {"VisibilityTimeout"=>"45"} 
+        # queue.get_attribute('VisibilityTimeout')  #=> {"VisibilityTimeout"=>"45"}
         #
       def get_attribute(attribute='All')
         attributes = @sqs.interface.get_queue_attributes(@url, attribute)
         attribute=='All' ? attributes : attributes[attribute]
       end
     end
-        
+
     class Message
       attr_reader   :queue, :id, :body, :visibility, :receipt_handle
       attr_accessor :sent_at, :received_at, :send_checksum, :receive_checksum
-      
+
       def initialize(queue, id=nil, rh = nil, body=nil, visibility=nil)
         @queue       = queue
         @id          = id
-        @receipt_handle = rh 
+        @receipt_handle = rh
         @body        = body
         @visibility  = visibility
         @sent_at     = nil
@@ -267,13 +267,13 @@ module RightAws
         @send_checksum = nil
         @receive_checksum = nil
       end
-      
+
         # Returns +Message+ instance body.
       def to_s
         @body
       end
 
-        # Removes message from queue. 
+        # Removes message from queue.
         # Returns +true+.
       def delete
         @queue.sqs.interface.delete_message(@queue.url, @receipt_handle) if @receipt_handle

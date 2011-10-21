@@ -18,7 +18,7 @@ module Authlogic
         #
         # * <tt>session_class</tt> - default: "#{name}Session",
         #   This is the related session class. A lot of the configuration will be based off of the configuration values of this class.
-        #   
+        #
         # * <tt>crypto_provider</tt> - default: Authlogic::CryptoProviders::Sha512,
         #   This is the class that provides your encryption. By default Authlogic provides its own crypto provider that uses Sha512 encrypton.
         #
@@ -39,7 +39,7 @@ module Authlogic
         #
         # * <tt>login_field</tt> - default: :login, :username, or :email, depending on which column is present, if none are present defaults to :login
         #   The name of the field used for logging in. Only specify if you aren't using any of the defaults.
-        #   
+        #
         # * <tt>login_field_type</tt> - default: options[:login_field] == :email ? :email : :login,
         #   Tells authlogic how to validation the field, what regex to use, etc. If the field name is email it will automatically use :email,
         #   otherwise it uses :login.
@@ -76,17 +76,17 @@ module Authlogic
         #   Authlogic automatically maintains when to reset the perishable_token. This token should reset frequently because it is "perishable", but how frequent depends on your app.
         #   By default it tries to reset this token as much as possible, which is done via a before_validation callback. If for some reason you want to maintain this yourself just
         #   set this to true and use the reset_perishable_token and reset_perishable_token! methods to maintain it yourself.
-        #   
+        #
         # * <tt>persistence_token_field</tt> - default: :persistence_token, :remember_token, or :cookie_tokien, depending on which column is present,
         #   defaults to :persistence_token if none are present,
         #   This is the name of the field your persistence token is stored. The persistence token is a unique token that is stored in the users cookie and
         #   session. This way you have complete control of when sessions expire and you don't have to change passwords to expire sessions. This also
         #   ensures that stale sessions can not be persisted. By stale, I mean sessions that are logged in using an outdated password.
-        #   
+        #
         # * <tt>logged_in_timeout</tt> - default: 10.minutes,
         #   This is a nifty feature to tell if a user is logged in or not. It's based on activity. So if the user in inactive longer than
         #   the value passed here they are assumed "logged out". This uses the last_request_at field, this field must be present for this option to take effect.
-        #   
+        #
         # * <tt>session_ids</tt> - default: [nil],
         #   The sessions that we want to automatically reset when a user is created or updated so you don't have to worry about this. Set to [] to disable.
         #   Should be an array of ids. See the Authlogic::Session documentation for information on ids. The order is important.
@@ -157,7 +157,7 @@ module Authlogic
             rescue Exception
               return
             end
-            
+
             # Base configuration
             options[:session_class] ||= "#{name}Session"
             options[:crypto_provider] ||= CryptoProviders::Sha512
@@ -166,7 +166,7 @@ module Authlogic
             options[:password_field] ||= :password
             options[:crypted_password_field] ||= first_column_to_exist(:crypted_password, :encrypted_password, :password_hash, :pw_hash)
             options[:password_salt_field] ||= first_column_to_exist(:password_salt, :pw_salt, :salt)
-            
+
             options[:email_field] = first_column_to_exist(nil, :email) unless options.key?(:email_field)
             options[:email_field] = nil if options[:email_field] == options[:login_field]
             options[:persistence_token_field] ||= options[:remember_token_field] || first_column_to_exist(:persistence_token, :remember_token, :cookie_token)
@@ -177,33 +177,33 @@ module Authlogic
             options[:logged_in_timeout] ||= 10.minutes
             options[:logged_in_timeout] = options[:logged_in_timeout].to_i
             options[:session_ids] ||= [nil]
-            
+
             # Validation configuration
             options[:validate_fields] = true unless options.key?(:validate_fields)
             options[:validate_login_field] = true unless options.key?(:validate_login_field)
             options[:validate_password_field] = true unless options.key?(:validate_password_field)
             options[:validate_email_field] = true unless options.key?(:validate_email_field)
-            
+
             options[:validation_options] ||= {}
-            
+
             [:login, :password, :email].each do |field_name|
               field_key = "#{field_name}_field_validation_options".to_sym
               options[field_key] = options[:validation_options].merge(options[field_key] || {})
-              
+
               validation_types = field_name == :password ? [:length, :confirmation] : [:length, :format, :uniqueness]
               validation_types.each do |validation_type|
                 validation_key = "#{field_name}_field_validates_#{validation_type}_of_options".to_sym
                 options[validation_key] = options[field_key].merge(options[validation_key] || {})
               end
             end
-            
+
             options[:password_confirmation_field_validates_presence_of_options] ||= {}
-            
+
             if options[:scope]
               options[:login_field_validates_uniqueness_of_options][:scope] ||= options[:scope]
               options[:email_field_validates_uniqueness_of_options][:scope] ||= options[:scope]
             end
-            
+
             if options[:act_like_restful_authentication] || options[:transition_from_restful_authentication]
               crypto_provider_key = options[:act_like_restful_authentication] ? :crypto_provider : :transition_from_crypto_provider
               options[crypto_provider_key] = CryptoProviders::Sha1
@@ -212,14 +212,14 @@ module Authlogic
                 options[crypto_provider_key].stretches = 1
               end
             end
-            
+
             options[:transition_from_crypto_provider] = [options[:transition_from_crypto_provider]].compact unless options[:transition_from_crypto_provider].is_a?(Array)
-            
+
             cattr_accessor :acts_as_authentic_config
             self.acts_as_authentic_config = options
             acts_as_authentic_without_config(options)
           end
-          
+
           def first_column_to_exist(*columns_to_check) # :nodoc:
             columns_to_check.each { |column_name| return column_name.to_sym if column_names.include?(column_name.to_s) }
             columns_to_check.first ? columns_to_check.first.to_sym : nil

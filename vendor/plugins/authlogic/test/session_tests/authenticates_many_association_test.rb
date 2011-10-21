@@ -8,7 +8,7 @@ module SessionTests
       assert_equal({:conditions => ["1 = ?", 1]}, assoc.find_options)
       assert_equal :some_id, assoc.id
     end
-    
+
     def test_new
       ben = users(:ben)
       assoc = Authlogic::Session::AuthenticatesManyAssociation.new(UserSession, {:conditions => ["1 = ?", 1]}, :some_id)
@@ -16,7 +16,7 @@ module SessionTests
       assert_equal ben, session.unauthorized_record
       assert_equal({:find_options => {:conditions => ["1 = ?", 1]}, :id => :some_id}, session.scope)
     end
-    
+
     def test_build
       binary_logic = companies(:binary_logic)
       ben = users(:ben)

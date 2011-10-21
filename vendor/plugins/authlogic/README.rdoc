@@ -27,7 +27,7 @@ What if your user sessions controller could look just like your other controller
     def new
       @user_session = UserSession.new
     end
-    
+
     def create
       @user_session = UserSession.new(params[:user_session])
       if @user_session.save
@@ -36,7 +36,7 @@ What if your user sessions controller could look just like your other controller
         render :action => :new
       end
     end
-    
+
     def destroy
       current_user_session.destroy
       redirect_to new_user_session_url
@@ -60,13 +60,13 @@ Or how about persisting the session...
 
   class ApplicationController
     helper_method :current_user_session, :current_user
-    
+
     private
       def current_user_session
         return @current_user_session if defined?(@current_user_session)
         @current_user_session = UserSession.find
       end
-      
+
       def current_user
         return @current_user if defined?(@current_user)
         @current_user = current_user_session && current_user_session.user
@@ -185,7 +185,7 @@ Just like ActiveRecord has "magic" columns, such as: created_at and updated_at. 
   last_login_at         Updates with the value of current_login_at before it is reset.
   current_login_ip      Updates with the request remote_ip when an explicit login is made.
   last_login_ip         Updates with the value of current_login_ip before it is reset.
-  
+
 == Magic States
 
 Authlogic tries to check the state of the record before creating the session. If your record responds to the following methods and any of them return false, validation will fail:
@@ -196,7 +196,7 @@ Authlogic tries to check the state of the record before creating the session. If
   confirmed?            Has the record been conirmed?
 
 Authlogic does nothing to define these methods for you, its up to you to define what they mean. If your object responds to these methods Authlogic will use them, otherwise they are ignored.
-  
+
 What's neat about this is that these are checked upon any type of login. When logging in explicitly, by cookie, session, or basic http auth. So if you mark a user inactive in the middle of their session they wont be logged back in next time they refresh the page. Giving you complete control.
 
 Need Authlogic to check your own "state"? No problem, check out the hooks section below. Add in a before_validation to do your own checking. The sky is the limit.
@@ -217,7 +217,7 @@ You have an app where users login and then need to re-login to view / change the
   @user_session = UserSession.new
   @user_session.id
   # => nil
-  
+
   # secure user session
   @secure_user_session = UserSession.new(:secure)
   @secure_user_session.id
@@ -413,7 +413,7 @@ The errors in Authlogic work JUST LIKE ActiveRecord. In fact, it uses the exact 
 
   class UserSession
     validate :check_if_awesome
-    
+
     private
       def check_if_awesome
         errors.add(:login, "must contain awesome") if login && !login.include?("awesome")
@@ -453,7 +453,7 @@ Here is basically how this is done....
 
   class User < ActiveRecord::Base
     after_save :maintain_sessions!
-    
+
     private
       def maintain_sessions!
         # If we aren't logged in and a user is created, log them in as that user

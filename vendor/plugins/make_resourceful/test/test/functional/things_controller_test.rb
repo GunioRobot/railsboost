@@ -34,7 +34,7 @@ class ThingsControllerTest < Test::Unit::TestCase
     get :show,
       :id => 2,
       :person_id => 2
-    
+
     assert_response 404
   end
 

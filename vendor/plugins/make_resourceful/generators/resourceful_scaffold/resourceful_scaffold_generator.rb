@@ -25,7 +25,7 @@ class ResourcefulScaffoldGenerator < Rails::Generator::NamedBase
       @controller_class_name = "#{@controller_class_nesting}::#{@controller_class_name_without_nesting}"
     end
   end
-  
+
   def manifest
     record do |m|
 # Check for class naming collisions.
@@ -50,13 +50,13 @@ class ResourcefulScaffoldGenerator < Rails::Generator::NamedBase
       m.template('view_form.haml',
           File.join('app/views', controller_class_path, controller_file_name, "_form.haml")
         )
-      
+
       m.template('partial.haml', File.join('app/views', controller_class_path, controller_file_name, "_#{singular_name}.haml"))
 
       # Layout and stylesheet.
       m.template('layout.haml', File.join('app/views/layouts', controller_class_path, "application.haml"))
 
-      #m.dependency 'model', [singular_name] + @args, :collision => :skip 
+      #m.dependency 'model', [singular_name] + @args, :collision => :skip
 
       m.template(
         'controller.rb', File.join('app/controllers', controller_class_path, "#{controller_file_name}_controller.rb")
@@ -75,7 +75,7 @@ class ResourcefulScaffoldGenerator < Rails::Generator::NamedBase
       %w[ index show new edit ]
     end
 
-    def model_name 
+    def model_name
       class_name.demodulize
     end
 end

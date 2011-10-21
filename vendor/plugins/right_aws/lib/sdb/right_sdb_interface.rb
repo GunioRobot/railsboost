@@ -26,7 +26,7 @@ require "right_aws"
 module RightAws
 
   class SdbInterface < RightAwsBase
-    
+
     include RightAwsBaseInterface
 
     DEFAULT_HOST      = 'sdb.amazonaws.com'
@@ -49,27 +49,27 @@ module RightAws
     #      :protocol     => 'https'              # Amazon service protocol: 'http' or 'https'(default)
     #      :signature_version => '0'             # The signature version : '0' or '1'(default)
     #      :multi_thread => true|false           # Multi-threaded (connection per each thread): true or false(default)
-    #      :logger       => Logger Object        # Logger instance: logs to STDOUT if omitted 
+    #      :logger       => Logger Object        # Logger instance: logs to STDOUT if omitted
     #      :nil_representation => 'mynil'}       # interpret Ruby nil as this string value; i.e. use this string in SDB to represent Ruby nils (default is the string 'nil')
-    #      
+    #
     # Example:
-    # 
+    #
     #  sdb = RightAws::SdbInterface.new('1E3GDYEOGFJPIT7XXXXXX','hgTHt68JY07JKUY08ftHYtERkjgtfERn57XXXXXX', {:multi_thread => true, :logger => Logger.new('/tmp/x.log')}) #=> #<RightSdb:0xa6b8c27c>
-    #  
+    #
     # see: http://docs.amazonwebservices.com/AmazonSimpleDB/2007-11-07/DeveloperGuide/
     #
     def initialize(aws_access_key_id=nil, aws_secret_access_key=nil, params={})
       @nil_rep = params[:nil_representation] ? params[:nil_representation] : DEFAULT_NIL_REPRESENTATION
       params.delete(:nil_representation)
-      init({ :name             => 'SDB', 
-             :default_host     => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).host   : DEFAULT_HOST, 
-             :default_port     => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).port   : DEFAULT_PORT, 
-             :default_protocol => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).scheme : DEFAULT_PROTOCOL }, 
-           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'], 
-           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'], 
+      init({ :name             => 'SDB',
+             :default_host     => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).host   : DEFAULT_HOST,
+             :default_port     => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).port   : DEFAULT_PORT,
+             :default_protocol => ENV['SDB_URL'] ? URI.parse(ENV['SDB_URL']).scheme : DEFAULT_PROTOCOL },
+           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'],
+           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'],
            params)
     end
-    
+
     #-----------------------------------------------------------------
     #      Requests
     #-----------------------------------------------------------------
@@ -102,7 +102,7 @@ module RightAws
         request       = Net::HTTP::Get.new("/?#{service_string}")
       end
       # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
@@ -142,28 +142,28 @@ module RightAws
       end
       result
     end
-    
-    # Use this helper to manually escape the fields in the query expressions. 
+
+    # Use this helper to manually escape the fields in the query expressions.
     # To escape the single quotes and backslashes and to wrap the string into the single quotes.
-    # 
+    #
     # see: http://docs.amazonwebservices.com/AmazonSimpleDB/2007-11-07/DeveloperGuide/SDB_API.html
     #
     def escape(value)
       %Q{'#{value.to_s.gsub(/(['\\])/){ "\\#{$1}" }}'} if value
     end
-    
+
     # Convert a Ruby language value to a SDB value by replacing Ruby nil with the user's chosen string representation of nil.
     # Non-nil values are unaffected by this filter.
     def ruby_to_sdb(value)
       value.nil? ? @nil_rep : value
     end
-    
+
     # Convert a SDB value to a Ruby language value by replacing the user's chosen string representation of nil with Ruby nil.
     # Values are unaffected by this filter unless they match the nil representation exactly.
     def sdb_to_ruby(value)
       value.eql?(@nil_rep) ? nil : value
     end
-    
+
     # Create query expression from an array.
     # (similar to ActiveRecord::Base#find using :conditions => ['query', param1, .., paramN])
     #
@@ -179,25 +179,25 @@ module RightAws
         end
       end
     end
-    
+
     # Retrieve a list of SDB domains from Amazon.
-    # 
+    #
     # Returns a hash:
     #   { :domains     => [domain1, ..., domainN],
     #     :next_token => string || nil,
     #     :box_usage   => string,
     #     :request_id  => string }
-    #     
+    #
     # Example:
-    # 
+    #
     #  sdb = RightAws::SdbInterface.new
     #  sdb.list_domains  #=> { :box_usage  => "0.0000071759",
     #                          :request_id => "976709f9-0111-2345-92cb-9ce90acd0982",
     #                          :domains    => ["toys", "dolls"]}
-    # 
+    #
     # If a block is given, this method yields to it.  If the block returns true, list_domains will continue looping the request.  If the block returns false,
     # list_domains will end.
-    # 
+    #
     #   sdb.list_domains(10) do |result|   # list by 10 domains per iteration
     #     puts result.inspect
     #     true
@@ -214,7 +214,7 @@ module RightAws
       return result unless block_given?
       # loop if block if given
       begin
-        # the block must return true if it wanna continue 
+        # the block must return true if it wanna continue
         break unless yield(result) && result[:next_token]
         # make new request
         request_params['NextToken'] = result[:next_token]
@@ -224,14 +224,14 @@ module RightAws
     rescue Exception
       on_exception
     end
-    
+
     # Create new SDB domain at Amazon.
-    # 
+    #
     # Returns a hash: { :box_usage, :request_id } on success or an exception on error.
     # (Amazon raises no errors if the domain already exists).
-    # 
+    #
     # Example:
-    # 
+    #
     #  sdb = RightAws::SdbInterface.new
     #  sdb.create_domain('toys') # => { :box_usage  => "0.0000071759",
     #                                   :request_id => "976709f9-0111-2345-92cb-9ce90acd0982" }
@@ -246,12 +246,12 @@ module RightAws
     end
 
     # Delete SDB domain at Amazon.
-    # 
+    #
     # Returns a hash: { :box_usage, :request_id } on success or an exception on error.
     # (Amazon raises no errors if the domain does not exist).
-    # 
+    #
     # Example:
-    # 
+    #
     #  sdb = RightAws::SdbInterface.new
     #  sdb.delete_domain('toys') # => { :box_usage  => "0.0000071759",
     #                                   :request_id => "976709f9-0111-2345-92cb-9ce90acd0982" }
@@ -265,9 +265,9 @@ module RightAws
     rescue Exception
       on_exception
     end
-    
+
     # Add/Replace item attributes.
-    # 
+    #
     # Params:
     #  domain_name = DomainName
     #  item_name   = ItemName
@@ -277,28 +277,28 @@ module RightAws
     #    'nameZ' => [valueZ1,..., valueZN]
     #  }
     #  replace = :replace | any other value to skip replacement
-    #  
-    # Returns a hash: { :box_usage, :request_id } on success or an exception on error. 
+    #
+    # Returns a hash: { :box_usage, :request_id } on success or an exception on error.
     # (Amazon raises no errors if the attribute was not overridden, as when the :replace param is unset).
-    # 
+    #
     # Example:
-    # 
+    #
     #  sdb = RightAws::SdbInterface.new
     #  sdb.create_domain 'family'
-    #  
+    #
     #  attributes = {}
     #  # create attributes for Jon and Silvia
     #  attributes['Jon']    = %w{ car beer }
-    #  attributes['Silvia'] = %w{ beetle rolling_pin kids } 
+    #  attributes['Silvia'] = %w{ beetle rolling_pin kids }
     #  sdb.put_attributes 'family', 'toys', attributes   #=> ok
     #  # now: Jon=>[car, beer], Silvia=>[beetle, rolling_pin, kids]
-    #  
+    #
     #  # add attributes to Jon
     #  attributes.delete('Silvia')
     #  attributes['Jon'] = %w{ girls pub }
     #  sdb.put_attributes 'family', 'toys', attributes   #=> ok
     #  # now: Jon=>[car, beer, girls, pub], Silvia=>[beetle, rolling_pin, kids]
-    #  
+    #
     #  # replace attributes for Jon and add to a cat (the cat had no attributes before)
     #  attributes['Jon'] = %w{ vacuum_cleaner hammer spade }
     #  attributes['cat'] = %w{ mouse clew Jons_socks }
@@ -315,16 +315,16 @@ module RightAws
     rescue Exception
       on_exception
     end
-    
+
     # Retrieve SDB item's attribute(s).
-    # 
+    #
     # Returns a hash:
     #  { :box_usage  => string,
     #    :request_id => string,
     #    :attributes => { 'nameA' => [valueA1,..., valueAN],
     #                     ... ,
     #                     'nameZ' => [valueZ1,..., valueZN] } }
-    # 
+    #
     # Example:
     #  # request all attributes
     #  sdb.get_attributes('family', 'toys') # => { :attributes => {"cat"    => ["clew", "Jons_socks", "mouse"] },
@@ -332,7 +332,7 @@ module RightAws
     #                                                              "Jon"    => ["vacuum_cleaner", "hammer", "spade"]},
     #                                              :box_usage  => "0.0000093222",
     #                                              :request_id => "81273d21-000-1111-b3f9-512d91d29ac8" }
-    #  
+    #
     #  # request cat's attributes only
     #  sdb.get_attributes('family', 'toys', 'cat') # => { :attributes => {"cat" => ["clew", "Jons_socks", "mouse"] },
     #                                                     :box_usage  => "0.0000093222",
@@ -361,13 +361,13 @@ module RightAws
     #
     #  # delete the all the values from attributes (i.e. delete the attributes)
     #  sdb.delete_attributes 'family', 'toys', { 'Jon' => [], 'cat' => [] }
-    #  # or 
+    #  # or
     #  sdb.delete_attributes 'family', 'toys', [ 'Jon', 'cat' ]
     #
     #  # delete all the attributes from item 'toys' (i.e. delete the item)
     #  sdb.delete_attributes 'family', 'toys'
-    #  
-    # see http://docs.amazonwebservices.com/AmazonSimpleDB/2007-11-07/DeveloperGuide/SDB_API_DeleteAttributes.html 
+    #
+    # see http://docs.amazonwebservices.com/AmazonSimpleDB/2007-11-07/DeveloperGuide/SDB_API_DeleteAttributes.html
     #
     def delete_attributes(domain_name, item_name, attributes = nil)
       params = { 'DomainName' => domain_name,
@@ -377,34 +377,34 @@ module RightAws
     rescue Exception
       on_exception
     end
-    
-    
+
+
     # QUERY:
- 
+
     # Perform a query on SDB.
-    # 
+    #
     # Returns a hash:
     #   { :box_usage  => string,
     #     :request_id => string,
     #     :next_token => string,
     #     :items      => [ItemName1,..., ItemNameN] }
-    #     
+    #
     # Example:
-    # 
+    #
     #   query = "['cat' = 'clew']"
     #   sdb.query('family', query)     #=> hash of data
     #   sdb.query('family', query, 10) #=> hash of data with max of 10 items
-    # 
+    #
     # If a block is given, query will iteratively yield results to it as long as the block continues to return true.
-    # 
-    #   # List 10 items per iteration. Don't 
+    #
+    #   # List 10 items per iteration. Don't
     #   # forget to escape single quotes and backslashes and wrap all the items in single quotes.
     #   query = "['cat'='clew'] union ['dog'='Jon\\'s boot']"
     #   sdb.query('family', query, 10) do |result|
     #     puts result.inspect
     #     true
     #   end
-    #  
+    #
     #   # Same query using automatic escaping...to use the auto escape, pass the query and its params as an array:
     #   query = [ "['cat'=?] union ['dog'=?]", "clew", "Jon's boot" ]
     #   sdb.query('family', query)
@@ -429,7 +429,7 @@ module RightAws
       return result unless block_given?
       # loop if block if given
       begin
-        # the block must return true if it wanna continue 
+        # the block must return true if it wanna continue
         break unless yield(result) && result[:next_token]
         # make new request
         request_params['NextToken'] = result[:next_token]
@@ -439,7 +439,7 @@ module RightAws
     rescue Exception
       on_exception
     end
-    
+
     #-----------------------------------------------------------------
     #      PARSERS:
     #-----------------------------------------------------------------
@@ -499,5 +499,5 @@ module RightAws
     end
 
   end
-  
+
 end

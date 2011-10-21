@@ -52,14 +52,14 @@ module Authlogic
           alias_method_chain :search_for_record, :scopes
         end
       end
-      
+
       # = Scopes
       module ClassMethods
         # The current scope set, should be used in the block passed to with_scope.
         def scope
           Thread.current[:authlogic_scope]
         end
-        
+
         # See the documentation for this class for more information on how to use this method.
         def with_scope(options = {}, &block)
           raise ArgumentError.new("You must provide a block") unless block_given?
@@ -68,24 +68,24 @@ module Authlogic
           self.scope = nil
           result
         end
-        
+
         private
           def scope=(value)
             Thread.current[:authlogic_scope] = value
           end
       end
-      
+
       module InstanceMethods
         def initialize_with_scopes(*args) # :nodoc:
           self.scope = self.class.scope
           initialize_without_scopes(*args)
         end
-        
+
         # See the documentation for this class for more information on how to use this method.
         def scope
           @scope ||= {}
         end
-        
+
         def search_for_record_with_scopes(*args) # :nodoc:
           klass.send(:with_scope, :find => (scope[:find_options] || {})) do
             search_for_record_without_scopes(*args)

@@ -8,7 +8,7 @@ module SessionTests
       session = UserSession.find
       assert session
       assert !session.record.last_request_at.nil?
-      
+
       UserSession.last_request_at_threshold = 2.seconds
       assert_equal 2.seconds, UserSession.last_request_at_threshold
 
@@ -24,7 +24,7 @@ module SessionTests
       UserSession.last_request_at_threshold 0
       assert_equal 0, UserSession.last_request_at_threshold
     end
-    
+
     def test_after_save
       ben = users(:ben)
       session = UserSession.new(ben)
@@ -32,7 +32,7 @@ module SessionTests
       assert !session.record.last_request_at.nil?
       assert !session.stale?
     end
-    
+
     def test_not_stale
       UserSession.logout_on_timeout = true
       ben = users(:ben)
@@ -41,7 +41,7 @@ module SessionTests
       session = UserSession.find
       assert !session.stale?
     end
-    
+
     def test_stale
       ben = users(:ben)
       set_session_for(ben)
@@ -52,16 +52,16 @@ module SessionTests
       assert_nil @controller.session["user_credentials_id"]
       UserSession.logout_on_timeout = false
     end
-    
+
     def test_stale_find
       UserSession.logout_on_timeout = true
       ben = users(:ben)
-      
+
       ben.update_attribute(:last_request_at, 3.years.ago)
       set_session_for(ben)
       session = UserSession.find
       assert session.stale?
-      
+
       ben.update_attribute(:last_request_at, Time.now)
       set_session_for(ben)
       session = UserSession.find

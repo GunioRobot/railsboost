@@ -10,5 +10,5 @@ class User < ActiveRecord::Base
   def ensure_cant_delete_indestructible_user
     false if self.first_name == 'indestructible'
   end
-  
+
 end

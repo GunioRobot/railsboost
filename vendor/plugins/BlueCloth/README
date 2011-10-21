@@ -4,7 +4,7 @@ BlueCloth
 
 Version 1.0.0 - 2004/08/24
 
-Original version by John Gruber <http://daringfireball.net/>.  
+Original version by John Gruber <http://daringfireball.net/>.
 Ruby port by Michael Granger <http://www.deveiate.org/>.
 
 BlueCloth is a Ruby implementation of [Markdown][1], a text-to-HTML conversion
@@ -71,12 +71,12 @@ offering suggestions and review:
 Author/Legal
 ------------
 
-Original version:  
-Copyright (c) 2003-2004 John Gruber  
-<http://daringfireball.net/>  
+Original version:
+Copyright (c) 2003-2004 John Gruber
+<http://daringfireball.net/>
 All rights reserved.
 
-Ruby version:  
+Ruby version:
 Copyright (c) 2004 The FaerieMUD Consortium
 
 BlueCloth is free software; you can redistribute it and/or modify it under the
@@ -95,5 +95,5 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
   [4]: http://www.textism.com/tools/textile/
 
 
-$Id: README 65 2004-08-24 14:56:47Z ged $  
+$Id: README 65 2004-08-24 14:56:47Z ged $
 $URL: svn+ssh://svn.FaerieMUD.org/usr/local/svn/BlueCloth/trunk/README $

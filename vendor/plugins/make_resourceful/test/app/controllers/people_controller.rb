@@ -1,6 +1,6 @@
 class PeopleController < ApplicationController
   before_filter :ok_go, :only => [:index, :show, :new, :destroy, :update, :create]
-  
+
   make_resourceful do
     build :index, :show,
           :edit,  :destroy,
@@ -10,11 +10,11 @@ class PeopleController < ApplicationController
     def hidden
       puts "this should not be public"
     end
-    
+
     before :show do
       @before_show_called = true
     end
-    
+
     response_for :show do
       redirect_to person_path(@person)
     end
@@ -28,7 +28,7 @@ class PeopleController < ApplicationController
       format.json { render :json => "JSON".to_json }
     end
   end
-  
+
   # This is a custom edit that should override the make_resourceful one
   def edit
     render :text => "<p>I am a custom edit for the person #{current_object.name}</p>"

@@ -11,7 +11,7 @@ module ORMAdaptersTests
           assert_equal 1, User.logged_in.count
           assert_equal User.count - 1, User.logged_out.count
         end
-        
+
         def test_logged_in
           ben = users(:ben)
           assert !ben.logged_in?

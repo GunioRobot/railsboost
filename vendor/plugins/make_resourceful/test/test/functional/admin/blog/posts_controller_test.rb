@@ -26,18 +26,18 @@ class Admin::Blog::PostsControllerTest < Test::Unit::TestCase
 
   def test_destroy
     post = posts(:second)
-    
+
     get :destroy,
         :id => 2
-    
+
     assert_redirected_to admin_blog_posts_path
     assert_equal post, assigns(:post)
-    
+
     begin
       Post.find(2)
     rescue ActiveRecord::RecordNotFound => err
     end
-    
+
     assert_not_nil err
   end
 end

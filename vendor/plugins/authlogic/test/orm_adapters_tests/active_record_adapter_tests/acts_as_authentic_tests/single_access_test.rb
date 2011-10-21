@@ -10,21 +10,21 @@ module ORMAdaptersTests
           assert !user.valid?
           assert user.single_access_token
         end
-        
+
         def test_change_with_password
           ben = users(:ben)
           old_single_access_token = ben.single_access_token
-          
+
           User.acts_as_authentic(:change_single_access_token_with_password => true)
           ben.password = "new_pass"
           assert_not_equal old_single_access_token, ben.single_access_token
-          
+
           ben.reload
           User.acts_as_authentic(:change_single_access_token_with_password => false)
           ben.password = "new_pass"
           assert_equal old_single_access_token, ben.single_access_token
         end
-        
+
         def test_reset_single_access_token
           ben = users(:ben)
           old_single_access_token = ben.single_access_token

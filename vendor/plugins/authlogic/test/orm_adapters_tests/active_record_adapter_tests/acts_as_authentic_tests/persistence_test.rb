@@ -14,7 +14,7 @@ module ORMAdaptersTests
 
           assert_equal 1000, unique_tokens.size
         end
-        
+
         def test_forget_all
           http_basic_auth_for(users(:ben)) { UserSession.find }
           http_basic_auth_for(users(:zack)) { UserSession.find(:ziggity_zack) }
@@ -24,7 +24,7 @@ module ORMAdaptersTests
           assert !UserSession.find
           assert !UserSession.find(:ziggity_zack)
         end
-        
+
         def test_forget
           ben = users(:ben)
           zack = users(:zack)
@@ -39,7 +39,7 @@ module ORMAdaptersTests
           assert !UserSession.find
           assert UserSession.find(:ziggity_zack)
         end
-        
+
         def test_password
           ben = users(:ben)
           old_persistence_token = ben.persistence_token

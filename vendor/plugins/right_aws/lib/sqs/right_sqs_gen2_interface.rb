@@ -33,11 +33,11 @@ module RightAws
   # This class provides a procedural interface to SQS.  Conceptually it is
   # mostly a pass-through interface to SQS and its API is very similar to the
   # bare SQS API.  For a somewhat higher-level and object-oriented interface, see
-  # RightAws::SqsGen2. 
+  # RightAws::SqsGen2.
 
   class SqsGen2Interface < RightAwsBase
     include RightAwsBaseInterface
-    
+
     SIGNATURE_VERSION = "1"
     API_VERSION       = "2008-01-01"
     DEFAULT_HOST      = "queue.amazonaws.com"
@@ -56,7 +56,7 @@ module RightAws
     end
 
     @@api = API_VERSION
-    def self.api 
+    def self.api
       @@api
     end
 
@@ -66,8 +66,8 @@ module RightAws
     # Amazon's article "Migrating to Amazon SQS API version 2008-01-01" at:
     # http://developer.amazonwebservices.com/connect/entry.jspa?externalID=1148
     #
-    #  sqs = RightAws::SqsGen2Interface.new('1E3GDYEOGFJPIT75KDT40','hgTHt68JY07JKUY08ftHYtERkjgtfERn57DFE379', {:multi_thread => true, :logger => Logger.new('/tmp/x.log')}) 
-    #  
+    #  sqs = RightAws::SqsGen2Interface.new('1E3GDYEOGFJPIT75KDT40','hgTHt68JY07JKUY08ftHYtERkjgtfERn57DFE379', {:multi_thread => true, :logger => Logger.new('/tmp/x.log')})
+    #
     # Params is a hash:
     #
     #    {:server       => 'queue.amazonaws.com' # Amazon service host: 'queue.amazonaws.com' (default)
@@ -77,12 +77,12 @@ module RightAws
     #     :logger       => Logger Object}        # Logger instance: logs to STDOUT if omitted }
     #
     def initialize(aws_access_key_id=nil, aws_secret_access_key=nil, params={})
-      init({ :name             => 'SQS', 
-             :default_host     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).host   : DEFAULT_HOST, 
-             :default_port     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).port   : DEFAULT_PORT, 
-             :default_protocol => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).scheme : DEFAULT_PROTOCOL }, 
-           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'], 
-           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'], 
+      init({ :name             => 'SQS',
+             :default_host     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).host   : DEFAULT_HOST,
+             :default_port     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).port   : DEFAULT_PORT,
+             :default_protocol => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).scheme : DEFAULT_PROTOCOL },
+           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'],
+           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'],
            params)
     end
 
@@ -112,7 +112,7 @@ module RightAws
       request_params = request_hash.to_a.collect{|key,val| key.to_s + "=" + val.to_s }.join("&")
       request        = Net::HTTP::Get.new(AwsUtils.URLencode("#{queue_uri}?#{request_params}"))
         # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
@@ -133,10 +133,10 @@ module RightAws
       request_hash['Signature'] = AwsUtils::sign(@aws_secret_access_key, request_data)
       request_body = request_hash.to_a.collect{|key,val| CGI.escape(key.to_s) + "=" + CGI.escape(val.to_s) }.join("&")
       request        = Net::HTTP::Post.new(AwsUtils.URLencode(queue_uri))
-      request['Content-Type'] = 'application/x-www-form-urlencoded' 
+      request['Content-Type'] = 'application/x-www-form-urlencoded'
       request.body = request_body
         # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
@@ -164,7 +164,7 @@ module RightAws
       on_exception
     end
 
-     # Lists all queues owned by this user that have names beginning with +queue_name_prefix+. 
+     # Lists all queues owned by this user that have names beginning with +queue_name_prefix+.
      # If +queue_name_prefix+ is omitted then retrieves a list of all queues.
      # Queue creation is an eventual operation and created queues may not show up in immediately subsequent list_queues calls.
      #
@@ -178,16 +178,16 @@ module RightAws
     rescue
       on_exception
     end
-      
-      # Deletes queue. Any messages in the queue are permanently lost. 
+
+      # Deletes queue. Any messages in the queue are permanently lost.
       # Returns +true+ or an exception.
       # Queue deletion can take up to 60 s to propagate through SQS.  Thus, after a deletion, subsequent list_queues calls
-      # may still show the deleted queue.  It is not unusual within the 60 s window to see the deleted queue absent from 
+      # may still show the deleted queue.  It is not unusual within the 60 s window to see the deleted queue absent from
       # one list_queues call but present in the subsequent one.  Deletion is eventual.
       #
       #  sqs.delete_queue('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue_2') #=> true
-      # 
-      # 
+      #
+      #
     def delete_queue(queue_url)
       req_hash = generate_request('DeleteQueue', :queue_url      => queue_url)
       request_info(req_hash, SqsStatusParser.new(:logger => @logger))
@@ -197,7 +197,7 @@ module RightAws
 
       # Retrieves the queue attribute(s). Returns a hash of attribute(s) or an exception.
       #
-      #  sqs.get_queue_attributes('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') 
+      #  sqs.get_queue_attributes('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue')
       #  #=> {"ApproximateNumberOfMessages"=>"0", "VisibilityTimeout"=>"30"}
       #
     def get_queue_attributes(queue_url, attribute='All')
@@ -212,9 +212,9 @@ module RightAws
       #  sqs.set_queue_attributes('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', "VisibilityTimeout", 10) #=> true
       #
       # From the SQS Dev Guide:
-      # "Currently, you can set only the 
-      # VisibilityTimeout attribute for a queue... 
-      # When you change a queue's attributes, the change can take up to 60 seconds to propagate 
+      # "Currently, you can set only the
+      # VisibilityTimeout attribute for a queue...
+      # When you change a queue's attributes, the change can take up to 60 seconds to propagate
       # throughout the SQS system."
       #
       # NB: Attribute values may not be immediately available to other queries
@@ -230,7 +230,7 @@ module RightAws
       # Retrieves a list of messages from queue. Returns an array of hashes in format: <tt>{:id=>'message_id', body=>'message_body'}</tt>
       #
       #   sqs.receive_message('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue',10, 5) #=>
-      #    [{"ReceiptHandle"=>"Euvo62...kw==", "MD5OfBody"=>"16af2171b5b83cfa35ce254966ba81e3", 
+      #    [{"ReceiptHandle"=>"Euvo62...kw==", "MD5OfBody"=>"16af2171b5b83cfa35ce254966ba81e3",
       #      "Body"=>"Goodbyte World!", "MessageId"=>"MUM4WlAyR...pYOTA="}, ..., {}]
       #
       # Normally this call returns fewer messages than the maximum specified,
@@ -244,7 +244,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Sends a new message to a queue.  Message size is limited to 8 KB.
       # If successful, this call returns a hash containing key/value pairs for
       # "MessageId" and "MD5OfMessageBody":
@@ -264,17 +264,17 @@ module RightAws
 
       # Same as send_message
     alias_method :push_message, :send_message
-    
-    
+
+
       # Deletes message from queue. Returns +true+ or an exception.  Amazon
       # returns +true+ on deletion of non-existent messages.  You must use the
-      # receipt handle for a message to delete it, not the message ID.  
+      # receipt handle for a message to delete it, not the message ID.
       #
       # From the SQS Developer Guide:
-      # "It is possible you will receive a message even after you have deleted it. This might happen 
-      # on rare occasions if one of the servers storing a copy of the message is unavailable when 
-      # you request to delete the message. The copy remains on the server and might be returned to 
-      # you again on a subsequent receive request. You should create your system to be 
+      # "It is possible you will receive a message even after you have deleted it. This might happen
+      # on rare occasions if one of the servers storing a copy of the message is unavailable when
+      # you request to delete the message. The copy remains on the server and might be returned to
+      # you again on a subsequent receive request. You should create your system to be
       # idempotent so that receiving a particular message more than once is not a problem. "
       #
       #  sqs.delete_message('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', 'Euvo62/1nlIet...ao03hd9Sa0w==') #=> true
@@ -285,7 +285,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Given the queue's short name, this call returns the queue URL or +nil+ if queue is not found
       #  sqs.queue_url_by_name('my_awesome_queue') #=> 'http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue'
       #
@@ -309,7 +309,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Returns short queue name by url.
       #
       #  sqs.queue_name_by_url('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') #=> 'my_awesome_queue'
@@ -344,7 +344,7 @@ module RightAws
       # Pops (retrieves and deletes) up to 'number_of_messages' from queue. Returns an array of retrieved messages in format: <tt>[{:id=>'message_id', :body=>'message_body'}]</tt>.
       #
       #   sqs.pop_messages('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', 3) #=>
-      #   [{"ReceiptHandle"=>"Euvo62/...+Zw==", "MD5OfBody"=>"16af2...81e3", "Body"=>"Goodbyte World!", 
+      #   [{"ReceiptHandle"=>"Euvo62/...+Zw==", "MD5OfBody"=>"16af2...81e3", "Body"=>"Goodbyte World!",
       #   "MessageId"=>"MEZI...JSWDE="}, {...}, ... , {...} ]
       #
     def pop_messages(queue_url, number_of_messages=1)
@@ -405,7 +405,7 @@ module RightAws
         @result = {}
       end
       def tagend(name)
-        case name 
+        case name
           when 'Name'      ; @current_attribute          = @text
           when 'Value'     ; @result[@current_attribute] = @text
         end
@@ -444,7 +444,7 @@ module RightAws
         end
       end
     end
-    
+
   end
 
 end

@@ -1,4 +1,4 @@
-# If ActiveSupport is loaded, then great - use it.  But we don't 
+# If ActiveSupport is loaded, then great - use it.  But we don't
 # want a dependency on it, so if it's not present, define the few
 # extensions that we want to use...
 unless defined? ActiveSupport::CoreExtensions
@@ -87,7 +87,7 @@ unless defined? ActiveSupport::CoreExtensions
 
   class Hash #:nodoc:
     alias_method :blank?, :empty?
-    
+
     # Return a new hash with all keys converted to symbols.
     def symbolize_keys
       inject({}) do |options, (key, value)|

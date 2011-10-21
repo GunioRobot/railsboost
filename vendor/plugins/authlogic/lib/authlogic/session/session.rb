@@ -9,7 +9,7 @@ module Authlogic
         klass.after_destroy :update_session, :if => :persisting_and_using_sessions?
         klass.after_find :update_session, :if => :persisting_and_using_sessions? # to continue persisting the session after an http_auth request
       end
-      
+
       # Tries to validate the session from information in the session
       def valid_session?
         persistence_token, record_id = session_credentials
@@ -30,21 +30,21 @@ module Authlogic
           false
         end
       end
-      
+
       private
         def session_credentials
           [controller.session[session_key], controller.session["#{session_key}_id"]].compact
         end
-        
+
         def update_session
           controller.session[session_key] = record && record.send(persistence_token_field)
           controller.session["#{session_key}_id"] = record && record.send(record.class.primary_key)
         end
-        
+
         def persist_using_sessions?
           find_with.include?(:session)
         end
-        
+
         def persisting_and_using_sessions?
           persisting? && persist_using_sessions?
         end

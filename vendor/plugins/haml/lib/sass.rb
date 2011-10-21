@@ -799,7 +799,7 @@ $LOAD_PATH << dir unless $LOAD_PATH.include?(dir)
 # ...or by setting the <tt>Merb::Config[:sass]</tt> hash in <tt>init.rb</tt> in Merb...
 #
 #   Merb::Config[:sass][:style] = :compact
-# 
+#
 # ...or by passing an options hash to Sass::Engine.new.
 # Available options are:
 #

@@ -56,7 +56,7 @@ class PeopleControllerTest < Test::Unit::TestCase
     assert_nil flash[:notice]
     assert_nil Person.find_by_age(attributes[:age])
 
-    assert_tag :tag => 'div', 
+    assert_tag :tag => 'div',
                :attributes => {:id => "errorExplanation"}
 
     assert_response 422
@@ -71,10 +71,10 @@ class PeopleControllerTest < Test::Unit::TestCase
     assert_equal people(:one), assigns(:current_object)
     assert_not_nil assigns(:before_show_called)
   end
-  
+
   def test_show_fails
     get :show, :id => 1982
-    
+
     assert_response 404
   end
 
@@ -108,7 +108,7 @@ class PeopleControllerTest < Test::Unit::TestCase
     assert assigns(:people).include?(people(:two))
 
     assert_equal assigns(:people), assigns(:current_objects)
-    
+
     assert_tag :content => "HTML"
   end
 

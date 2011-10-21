@@ -1,5 +1,5 @@
 
-namespace :commands do 
+namespace :commands do
   desc "Update/Load commands from the remote server"
   task :load  => :environment do
     require 'open-uri'

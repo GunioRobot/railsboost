@@ -8,7 +8,7 @@ module Authlogic
       def self.included(klass)
         klass.after_save :reset_perishable_token!
       end
-      
+
       private
         def reset_perishable_token!
           record.send("reset_#{perishable_token_field}") if record.respond_to?("reset_#{perishable_token_field}") && !record.send("disable_#{perishable_token_field}_maintenance?")

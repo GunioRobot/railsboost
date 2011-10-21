@@ -9,7 +9,7 @@ module Authlogic
     #   before_find
     #   after_find
     #   save record if changed?
-    #   
+    #
     #   before_validation
     #   before_validation_on_create
     #   before_validation_on_update
@@ -18,7 +18,7 @@ module Authlogic
     #   after_validation_on_create
     #   after_validation
     #   save record if changed?
-    #   
+    #
     #   before_save
     #   before_create
     #   before_update
@@ -26,7 +26,7 @@ module Authlogic
     #   after_create
     #   after_save
     #   save record if changed?
-    #   
+    #
     #   before_destroy
     #   destroy
     #   after_destroy
@@ -50,12 +50,12 @@ module Authlogic
         "before_save", "before_create", "before_update", "after_update", "after_create", "after_save",
         "before_destroy", "after_destroy"
       ]
-      
+
       def self.included(base) #:nodoc:
         base.send :include, ActiveSupport::Callbacks
         base.define_callbacks *METHODS
       end
-      
+
       METHODS.each do |method|
         class_eval <<-"end_eval", __FILE__, __LINE__
           def #{method}

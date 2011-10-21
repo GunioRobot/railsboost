@@ -25,7 +25,7 @@ module RightAws
 
   class SqsInterface < RightAwsBase
     include RightAwsBaseInterface
-    
+
     API_VERSION       = "2007-05-01"
     DEFAULT_HOST      = "queue.amazonaws.com"
     DEFAULT_PORT      = 443
@@ -43,14 +43,14 @@ module RightAws
     end
 
     @@api = API_VERSION
-    def self.api 
+    def self.api
       @@api
     end
 
       # Creates a new SqsInterface instance.
       #
-      #  sqs = RightAws::SqsInterface.new('1E3GDYEOGFJPIT75KDT40','hgTHt68JY07JKUY08ftHYtERkjgtfERn57DFE379', {:multi_thread => true, :logger => Logger.new('/tmp/x.log')}) 
-      #  
+      #  sqs = RightAws::SqsInterface.new('1E3GDYEOGFJPIT75KDT40','hgTHt68JY07JKUY08ftHYtERkjgtfERn57DFE379', {:multi_thread => true, :logger => Logger.new('/tmp/x.log')})
+      #
       # Params is a hash:
       #
       #    {:server       => 'queue.amazonaws.com' # Amazon service host: 'queue.amazonaws.com'(default)
@@ -60,12 +60,12 @@ module RightAws
       #     :logger       => Logger Object}        # Logger instance: logs to STDOUT if omitted }
       #
     def initialize(aws_access_key_id=nil, aws_secret_access_key=nil, params={})
-      init({ :name             => 'SQS', 
-             :default_host     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).host   : DEFAULT_HOST, 
-             :default_port     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).port   : DEFAULT_PORT, 
-             :default_protocol => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).scheme : DEFAULT_PROTOCOL }, 
-           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'], 
-           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'], 
+      init({ :name             => 'SQS',
+             :default_host     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).host   : DEFAULT_HOST,
+             :default_port     => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).port   : DEFAULT_PORT,
+             :default_protocol => ENV['SQS_URL'] ? URI.parse(ENV['SQS_URL']).scheme : DEFAULT_PROTOCOL },
+           aws_access_key_id     || ENV['AWS_ACCESS_KEY_ID'],
+           aws_secret_access_key || ENV['AWS_SECRET_ACCESS_KEY'],
            params)
     end
 
@@ -97,7 +97,7 @@ module RightAws
       request_params = service_hash.to_a.collect{|key,val| key.to_s + "=" + CGI::escape(val.to_s) }.join("&")
       request        = Net::HTTP::Get.new("#{queue_uri}?#{request_params}")
         # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
@@ -125,7 +125,7 @@ module RightAws
       request['Authorization'] = "AWS #{@aws_access_key_id}:#{signature}"
       request['AWS-Version']   = API_VERSION
         # prepare output hash
-      { :request  => request, 
+      { :request  => request,
         :server   => @params[:server],
         :port     => @params[:port],
         :protocol => @params[:protocol] }
@@ -149,7 +149,7 @@ module RightAws
       # (permission grant and removal for example)
       #
     def create_queue(queue_name, default_visibility_timeout=nil)
-      req_hash = generate_request('CreateQueue', 
+      req_hash = generate_request('CreateQueue',
                                   'QueueName'                => queue_name,
                                   'DefaultVisibilityTimeout' => default_visibility_timeout || DEFAULT_VISIBILITY_TIMEOUT )
       request_info(req_hash, SqsCreateQueueParser.new(:logger => @logger))
@@ -167,13 +167,13 @@ module RightAws
     rescue
       on_exception
     end
-      
+
       # Deletes queue (queue must be empty or +force_deletion+ must be set to true). Queue is identified by url. Returns +true+ or an exception.
       #
       #  sqs.delete_queue('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue_2') #=> true
       #
     def delete_queue(queue_url, force_deletion = false)
-      req_hash = generate_request('DeleteQueue', 
+      req_hash = generate_request('DeleteQueue',
                                   'ForceDeletion' => force_deletion.to_s,
                                   :queue_url      => queue_url)
       request_info(req_hash, SqsStatusParser.new(:logger => @logger))
@@ -186,7 +186,7 @@ module RightAws
       #  sqs.get_queue_attributes('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') #=> {"ApproximateNumberOfMessages"=>"0", "VisibilityTimeout"=>"30"}
       #
     def get_queue_attributes(queue_url, attribute='All')
-      req_hash = generate_request('GetQueueAttributes', 
+      req_hash = generate_request('GetQueueAttributes',
                                   'Attribute' => attribute,
                                   :queue_url  => queue_url)
       request_info(req_hash, SqsGetQueueAttributesParser.new(:logger => @logger))
@@ -202,7 +202,7 @@ module RightAws
       # for some time after an update (see the SQS documentation for
       # semantics).
     def set_queue_attributes(queue_url, attribute, value)
-      req_hash = generate_request('SetQueueAttributes', 
+      req_hash = generate_request('SetQueueAttributes',
                                   'Attribute' => attribute,
                                   'Value'     => value,
                                   :queue_url  => queue_url)
@@ -218,7 +218,7 @@ module RightAws
      # See also: +set_queue_attributes+
      #
     def set_visibility_timeout(queue_url, visibility_timeout=nil)
-      req_hash = generate_request('SetVisibilityTimeout', 
+      req_hash = generate_request('SetVisibilityTimeout',
                                   'VisibilityTimeout' => visibility_timeout || DEFAULT_VISIBILITY_TIMEOUT,
                                   :queue_url => queue_url )
       request_info(req_hash, SqsStatusParser.new(:logger => @logger))
@@ -244,7 +244,7 @@ module RightAws
      #  sqs.add_grant('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', 'my_awesome_friend@gmail.com', 'FULLCONTROL') #=> true
      #
     def add_grant(queue_url, grantee_email_address, permission = nil)
-      req_hash = generate_request('AddGrant', 
+      req_hash = generate_request('AddGrant',
                                   'Grantee.EmailAddress' => grantee_email_address,
                                   'Permission'           => permission,
                                   :queue_url             => queue_url)
@@ -252,22 +252,22 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Retrieves hash of +grantee_id+ => +perms+ for this queue:
       #
       #  sqs.list_grants('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') #=>
       #    {"000000000000000000000001111111111117476c7fea6efb2c3347ac3ab2792a"=>{:name=>"root", :perms=>["FULLCONTROL"]},
-      #     "00000000000000000000000111111111111e5828344600fc9e4a784a09e97041"=>{:name=>"myawesomefriend", :perms=>["FULLCONTROL"]}  
+      #     "00000000000000000000000111111111111e5828344600fc9e4a784a09e97041"=>{:name=>"myawesomefriend", :perms=>["FULLCONTROL"]}
       #
     def list_grants(queue_url, grantee_email_address=nil, permission = nil)
-      req_hash = generate_request('ListGrants', 
+      req_hash = generate_request('ListGrants',
                                   'Grantee.EmailAddress' => grantee_email_address,
                                   'Permission'           => permission,
                                   :queue_url             => queue_url)
       response = request_info(req_hash, SqsListGrantsParser.new(:logger => @logger))
         # One user may have up to 3 permission records for every queue.
         # We will join these records to one.
-      result = {}    
+      result = {}
       response.each do |perm|
         id = perm[:id]
           # create hash for new user if unexisit
@@ -285,7 +285,7 @@ module RightAws
       #
     def remove_grant(queue_url, grantee_email_address_or_id, permission = nil)
       grantee_key = grantee_email_address_or_id.include?('@') ? 'Grantee.EmailAddress' : 'Grantee.ID'
-      req_hash = generate_request('RemoveGrant', 
+      req_hash = generate_request('RemoveGrant',
                                   grantee_key  => grantee_email_address_or_id,
                                   'Permission' => permission,
                                   :queue_url   => queue_url)
@@ -311,7 +311,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Peeks message from queue by message id. Returns message in format of <tt>{:id=>'message_id', :body=>'message_body'}</tt> or +nil+.
       #
       #  sqs.peek_message('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', '1234567890...0987654321') #=>
@@ -337,27 +337,27 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Deletes message from queue. Returns +true+ or an exception.  Amazon
       # returns +true+ on deletion of non-existent messages.
       #
       #  sqs.delete_message('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', '12345678904...0987654321') #=> true
       #
     def delete_message(queue_url, message_id)
-      req_hash = generate_request('DeleteMessage', 
+      req_hash = generate_request('DeleteMessage',
                                   'MessageId' => message_id,
                                   :queue_url  => queue_url)
       request_info(req_hash, SqsStatusParser.new(:logger => @logger))
     rescue
       on_exception
     end
-    
+
       # Changes message visibility timeout. Returns +true+ or an exception.
       #
       #  sqs.change_message_visibility('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', '1234567890...0987654321', 10) #=> true
       #
     def change_message_visibility(queue_url, message_id, visibility_timeout=0)
-      req_hash = generate_request('ChangeMessageVisibility', 
+      req_hash = generate_request('ChangeMessageVisibility',
                                   'MessageId'         => message_id,
                                   'VisibilityTimeout' => visibility_timeout.to_s,
                                   :queue_url          => queue_url)
@@ -365,7 +365,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Returns queue url by queue short name or +nil+ if queue is not found
       #
       #  sqs.queue_url_by_name('my_awesome_queue') #=> 'http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue'
@@ -390,7 +390,7 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Returns short queue name by url.
       #
       #  sqs.queue_name_by_url('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') #=> 'my_awesome_queue'
@@ -426,7 +426,7 @@ module RightAws
       #
       #  sqs.force_clear_queue('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue') #=> true
       #
-      # PS This function is no longer supported.  Amazon has changed the SQS semantics to require at least 60 seconds between 
+      # PS This function is no longer supported.  Amazon has changed the SQS semantics to require at least 60 seconds between
       # queue deletion and creation. Hence this method will fail with an exception.
       #
     def force_clear_queue(queue_url)
@@ -436,7 +436,7 @@ module RightAws
       create_queue(queue_name)
         # hmmm... The next line is a trick. Amazon do not want change attributes immediately after queue creation
         # So we do 'empty' get_queue_attributes. Probably they need some time to allow attributes change.
-      get_queue_attributes(queue_url)  
+      get_queue_attributes(queue_url)
       queue_attributes.each{ |attribute, value| set_queue_attributes(queue_url, attribute, value) }
       true
     rescue
@@ -465,10 +465,10 @@ module RightAws
     rescue
       on_exception
     end
-    
+
       # Same as send_message
     alias_method :push_message, :send_message
-    
+
       # Pops (retrieves and deletes) up to 'number_of_messages' from queue. Returns an array of retrieved messages in format: <tt>[{:id=>'message_id', :body=>'message_body'}]</tt>.
       #
       #   sqs.pop_messages('http://queue.amazonaws.com/ZZ7XXXYYYBINS/my_awesome_queue', 3) #=>
@@ -532,7 +532,7 @@ module RightAws
         @result = {}
       end
       def tagend(name)
-        case name 
+        case name
           when 'Attribute' ; @current_attribute          = @text
           when 'Value'     ; @result[@current_attribute] = @text
   #        when 'StatusCode'; @result['status_code']      = @text
@@ -567,7 +567,7 @@ module RightAws
           when 'ID'         ; @current_perms[:id]         = @text
           when 'DisplayName'; @current_perms[:name]       = @text
           when 'Permission' ; @current_perms[:permission] = @text
-          when 'GrantList'  ; @result << @current_perms 
+          when 'GrantList'  ; @result << @current_perms
         end
       end
     end
@@ -597,7 +597,7 @@ module RightAws
         @result = @text if name == 'MessageId'
       end
     end
-    
+
   end
 
 end

@@ -111,7 +111,7 @@ END
         line = self
         @tabs ||= precompiler.instance_eval do
           break 0 if line.text.empty? || !(whitespace = line.full[/^\s+/])
-          
+
           if @indentation.nil?
             @indentation = whitespace
 
@@ -573,7 +573,7 @@ END
         else
           open_tag << "\n" unless parse || nuke_inner_whitespace || (self_closing && nuke_outer_whitespace)
         end
-        
+
         push_merged_text(open_tag, tag_closed || self_closing || nuke_inner_whitespace ? 0 : 1,
                          !nuke_outer_whitespace)
 

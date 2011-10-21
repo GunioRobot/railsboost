@@ -60,7 +60,7 @@ module Resourceful
             end
             format.js
           end
-          
+
           response_for(:create_fails) do |format|
             format.html do
               set_default_flash :error, "There was a problem!"
@@ -68,7 +68,7 @@ module Resourceful
             end
             format.js
           end
-        
+
           response_for(:update) do |format|
             format.html do
               set_default_flash :notice, "Save successful!"
@@ -76,7 +76,7 @@ module Resourceful
             end
             format.js
           end
-          
+
           response_for(:update_fails) do |format|
             format.html do
               set_default_flash :error, "There was a problem saving!"
@@ -84,7 +84,7 @@ module Resourceful
             end
             format.js
           end
-          
+
           response_for(:destroy) do |format|
             format.html do
               set_default_flash :notice, "Record deleted!"
@@ -92,7 +92,7 @@ module Resourceful
             end
             format.js
           end
-          
+
           response_for(:destroy_fails) do |format|
             format.html do
               set_default_flash :error, "There was a problem deleting."

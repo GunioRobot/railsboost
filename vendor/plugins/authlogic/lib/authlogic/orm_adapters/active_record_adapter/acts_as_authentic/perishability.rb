@@ -20,38 +20,38 @@ module Authlogic
         module Perishability
           def acts_as_authentic_with_perishability(options = {})
             acts_as_authentic_without_perishability(options)
-            
+
             return if options[:perishable_token_field].blank?
-            
+
             class_eval <<-"end_eval", __FILE__, __LINE__
               validates_uniqueness_of :#{options[:perishable_token_field]}, :if => :#{options[:perishable_token_field]}_changed?
-              
+
               before_save :reset_#{options[:perishable_token_field]}, :unless => :disable_#{options[:perishable_token_field]}_maintenance?
-              
+
               def self.find_using_#{options[:perishable_token_field]}(token, age = #{options[:perishable_token_valid_for]})
                 return if token.blank?
                 age = age.to_i
-                
+
                 conditions_sql = "#{options[:perishable_token_field]} = ?"
                 conditions_subs = [token]
-                
+
                 if column_names.include?("updated_at") && age > 0
                   conditions_sql += " and updated_at > ?"
                   conditions_subs << age.seconds.ago
                 end
-                
+
                 find(:first, :conditions => [conditions_sql, *conditions_subs])
               end
-              
+
               def reset_#{options[:perishable_token_field]}
                 self.#{options[:perishable_token_field]} = self.class.friendly_unique_token
               end
-              
+
               def reset_#{options[:perishable_token_field]}!
                 reset_#{options[:perishable_token_field]}
                 save_without_session_maintenance(false)
               end
-              
+
               def disable_#{options[:perishable_token_field]}_maintenance?
                 #{options[:disable_perishable_token_maintenance].inspect} == true
               end

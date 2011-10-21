@@ -22,20 +22,20 @@ module Authlogic
         klass.validate :increase_failed_login_count, :if => :protect_from_brute_force_attacks?
         klass.after_save :reset_failed_login_count, :if => :protect_from_brute_force_attacks?
       end
-      
+
       # This allows you to reset the failed_login_count for the associated record, allowing that account to start at 0 and continue
       # trying to login. So, if an account exceeds the limit the only way they will be able to log back in is if your execute this
       # method, which merely resets the failed_login_count field to 0.
       def reset_failed_login_count
         record.failed_login_count = 0
       end
-      
+
       private
         def protect_from_brute_force_attacks?
           r = attempted_record || record
           r && r.respond_to?(:failed_login_count) && consecutive_failed_logins_limit > 0
         end
-        
+
         def validate_failed_logins
           if attempted_record.failed_login_count && attempted_record.failed_login_count >= consecutive_failed_logins_limit
             errors.clear # Clear all other error messages, as they are irrelevant at this point and can only provide additional information that is not needed

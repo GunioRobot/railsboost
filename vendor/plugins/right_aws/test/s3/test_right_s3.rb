@@ -3,7 +3,7 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 class TestS3 < Test::Unit::TestCase
 
   RIGHT_OBJECT_TEXT     = 'Right test message'
-  
+
   def setup
     @s3     = Rightscale::S3Interface.new(TestCredentials.aws_access_key_id, TestCredentials.aws_secret_access_key)
     @bucket = 'right_s3_awesome_test_bucket_00001'
@@ -20,7 +20,7 @@ class TestS3 < Test::Unit::TestCase
   #---------------------------
   # Rightscale::S3Interface
   #---------------------------
-  
+
   def test_01_create_bucket
     assert @s3.create_bucket(@bucket), 'Create_bucket fail'
   end
@@ -32,13 +32,13 @@ class TestS3 < Test::Unit::TestCase
   def test_03_list_empty_bucket
     assert_equal 0, @s3.list_bucket(@bucket).size, "#{@bucket} isn't empty, arrgh!"
   end
-  
+
   def test_04_put
     assert @s3.put(@bucket, @key1, RIGHT_OBJECT_TEXT, 'x-amz-meta-family'=>'Woohoo1!'), 'Put bucket fail'
     assert @s3.put(@bucket, @key2, RIGHT_OBJECT_TEXT, 'x-amz-meta-family'=>'Woohoo2!'), 'Put bucket fail'
     assert @s3.put(@bucket, @key3, RIGHT_OBJECT_TEXT, 'x-amz-meta-family'=>'Woohoo3!'), 'Put bucket fail'
   end
-  
+
   def test_05_get_and_get_object
     assert_raise(Rightscale::AwsError) { @s3.get(@bucket, 'undefined/key') }
     data1 = @s3.get(@bucket, @key1)
@@ -47,7 +47,7 @@ class TestS3 < Test::Unit::TestCase
     assert_equal 'Woohoo1!', data1[:headers]['x-amz-meta-family'], "x-amz-meta-family header must be equal to 'Woohoo1!'"
     assert_equal RIGHT_OBJECT_TEXT, @s3.get_object(@bucket, @key3), "Get_object text must return '#{RIGHT_OBJECT_TEXT}'"
   end
-  
+
   def test_06_head
     assert_equal 'Woohoo1!', @s3.head(@bucket,@key1)['x-amz-meta-family'], "x-amz-meta-family header must be equal to 'Woohoo1!'"
   end
@@ -55,7 +55,7 @@ class TestS3 < Test::Unit::TestCase
 
   def test_07_streaming_get
     resp = String.new
-    assert_raise(Rightscale::AwsError) do 
+    assert_raise(Rightscale::AwsError) do
       @s3.get(@bucket, 'undefined/key') do |chunk|
         resp += chunk
       end
@@ -69,7 +69,7 @@ class TestS3 < Test::Unit::TestCase
     assert_equal @s3.get_object(@bucket, @key1), resp, "Streaming iface must return same as non-streaming"
     assert_equal 'Woohoo1!', data1[:headers]['x-amz-meta-family'], "x-amz-meta-family header must be equal to 'Woohoo1!'"
   end
-  
+
   def test_08_keys
     keys = @s3.list_bucket(@bucket).map{|b| b[:key]}
     assert_equal keys.size, 3, "There should be 3 keys"
@@ -77,7 +77,7 @@ class TestS3 < Test::Unit::TestCase
     assert(keys.include?(@key2))
     assert(keys.include?(@key3))
   end
-  
+
   def test_09_copy_key
     #--- test COPY
     # copy a key
@@ -130,7 +130,7 @@ class TestS3 < Test::Unit::TestCase
   def test_13_delete_folder
     assert_equal 1, @s3.delete_folder(@bucket, 'test').size, "Only one key(#{@key1}) must be deleted!"
   end
- 
+
   def test_14_delete_bucket
     assert_raise(Rightscale::AwsError) { @s3.delete_bucket(@bucket) }
     assert @s3.clear_bucket(@bucket), 'Clear_bucket fail'
@@ -138,9 +138,9 @@ class TestS3 < Test::Unit::TestCase
     assert @s3.delete_bucket(@bucket)
     assert !@s3.list_all_my_buckets.map{|bucket| bucket[:name]}.include?(@bucket), "#{@bucket} must not exist"
   end
-  
-  
-  
+
+
+
 
   #---------------------------
   # Rightscale::S3 classes
@@ -198,7 +198,7 @@ class TestS3 < Test::Unit::TestCase
     assert key2.delete
     assert !key2.exists?
   end
-  
+
   def test_23_rename_key
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
     # -- 1 -- (key based rename)
@@ -218,7 +218,7 @@ class TestS3 < Test::Unit::TestCase
     assert  bucket.key('test/copy/3').exists?, "'test/copy/3' should exist"
     assert !bucket.key('test/copy/2').exists?, "'test/copy/2' should not exist"
   end
-  
+
   def test_24_copy_key
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
     # -- 1 -- (key based copy)
@@ -239,7 +239,7 @@ class TestS3 < Test::Unit::TestCase
     assert_equal RIGHT_OBJECT_TEXT, bucket.key('test/copy/11').get
     assert_equal RIGHT_OBJECT_TEXT, bucket.key('test/copy/12').get
   end
-  
+
   def test_25_move_key
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
     # -- 1 -- (key based copy)
@@ -258,7 +258,7 @@ class TestS3 < Test::Unit::TestCase
     assert bucket.key('test/copy/22').exists?, "'test/copy/22' should exist"
     assert_equal RIGHT_OBJECT_TEXT, bucket.key('test/copy/22').get
   end
-  
+
   def test_26_save_meta
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
     # create a key
@@ -271,7 +271,7 @@ class TestS3 < Test::Unit::TestCase
     # reload meta
     assert_equal meta, key.reload_meta
   end
-    
+
   def test_27_clear_delete
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
       # add another key
@@ -284,12 +284,12 @@ class TestS3 < Test::Unit::TestCase
   end
 
     # Grantees
-    
+
   def test_30_create_bucket
     bucket = @s.bucket(@bucket, true, 'public-read')
     assert bucket
   end
-  
+
   def test_31_list_grantees
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
       # get grantees list
@@ -297,10 +297,10 @@ class TestS3 < Test::Unit::TestCase
       # check that the grantees count equal to 2 (root, AllUsers)
     assert_equal 2, grantees.size
   end
-  
+
   def test_32_grant_revoke_drop
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
-      # Take 'AllUsers' grantee 
+      # Take 'AllUsers' grantee
     grantee = Rightscale::S3::Grantee.new(bucket,'http://acs.amazonaws.com/groups/global/AllUsers')
       # Check exists?
     assert grantee.exists?
@@ -333,7 +333,7 @@ class TestS3 < Test::Unit::TestCase
       # Delete bucket
     bucket.delete(true)
   end
-  
+
   def test_33_key_grantees
       # Create bucket
     bucket = @s.bucket(@bucket, true)
@@ -393,24 +393,24 @@ class TestS3 < Test::Unit::TestCase
     RightAws::S3Interface.amazon_problems= nil
     assert_nil(RightAws::S3Interface.amazon_problems)
   end
-  
+
   def test_37_access_logging
     bucket = Rightscale::S3::Bucket.create(@s, @bucket, false)
     targetbucket = Rightscale::S3::Bucket.create(@s, @bucket2, true)
-      # Take 'AllUsers' grantee 
+      # Take 'AllUsers' grantee
     grantee = Rightscale::S3::Grantee.new(targetbucket,'http://acs.amazonaws.com/groups/s3/LogDelivery')
- 
+
     assert grantee.grant(['READ_ACP', 'WRITE'])
-    
+
     assert bucket.enable_logging(:targetbucket => targetbucket, :targetprefix => "loggylogs/")
-    
+
     assert_equal(bucket.logging_info, {:enabled => true, :targetbucket => @bucket2, :targetprefix => "loggylogs/"})
-    
+
     assert bucket.disable_logging
-    
+
       # check 'Drop' method
     assert grantee.drop
-    
+
       # Delete bucket
     bucket.delete(true)
     targetbucket.delete(true)

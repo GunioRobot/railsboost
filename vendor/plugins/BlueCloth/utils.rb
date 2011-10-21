@@ -81,13 +81,13 @@ module UtilityFunctions
 		'reverse'    => 7,
 		'concealed'  => 8,
 
-		'black'      => 30,   'on_black'   => 40, 
-		'red'        => 31,   'on_red'     => 41, 
-		'green'      => 32,   'on_green'   => 42, 
-		'yellow'     => 33,   'on_yellow'  => 43, 
-		'blue'       => 34,   'on_blue'    => 44, 
-		'magenta'    => 35,   'on_magenta' => 45, 
-		'cyan'       => 36,   'on_cyan'    => 46, 
+		'black'      => 30,   'on_black'   => 40,
+		'red'        => 31,   'on_red'     => 41,
+		'green'      => 32,   'on_green'   => 42,
+		'yellow'     => 33,   'on_yellow'  => 43,
+		'blue'       => 34,   'on_blue'    => 44,
+		'magenta'    => 35,   'on_magenta' => 45,
+		'cyan'       => 36,   'on_cyan'    => 46,
 		'white'      => 37,   'on_white'   => 47
 	}
 
@@ -102,7 +102,7 @@ module UtilityFunctions
 	def ansiCode( *attributes )
 		return '' unless /(?:vt10[03]|xterm(?:-color)?|linux)/i =~ ENV['TERM']
 		attr = attributes.collect {|a| AnsiAttributes[a] ? AnsiAttributes[a] : nil}.compact.join(';')
-		if attr.empty? 
+		if attr.empty?
 			return ''
 		else
 			return "\e[%sm" % attr
@@ -373,7 +373,7 @@ module UtilityFunctions
 		if main.nil?
 			basedir = File::dirname( __FILE__ )
 			basedir = File::dirname( basedir ) if /docs$/ =~ basedir
-			
+
 			if File::exists?( File::join(basedir, default) )
 				main = default
 			end
@@ -502,7 +502,7 @@ module UtilityFunctions
 	end
 
 
-	### Try the specified code block, printing the given 
+	### Try the specified code block, printing the given
 	def try( msg, bind=nil )
 		result = nil
 		if msg =~ /^to\s/
@@ -510,7 +510,7 @@ module UtilityFunctions
 		else
 			message = msg
 		end
-			
+
 		begin
 			rval = nil
 			if block_given?
